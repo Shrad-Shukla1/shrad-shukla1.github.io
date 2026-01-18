@@ -15,7 +15,6 @@
             padding: 0; 
         }
         
-        /* Container for the whole page */
         .container {
             max-width: 900px; 
             margin: 0 auto; 
@@ -27,26 +26,41 @@
 
         /* Header Section */
         header { 
-            text-align: left; 
+            text-align: center; 
             padding-bottom: 40px; 
             border-bottom: 1px solid #eee; 
             margin-bottom: 40px;
+            background: linear-gradient(to bottom, #f8f9fa, #ffffff);
+            padding-top: 40px;
         }
+        
+        /* UPDATED: Profile Photo is now smaller (130px) */
+        .profile-photo {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white; /* Slightly thinner border */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+
         h1 { 
             margin: 0 0 10px 0; 
             color: #2c3e50; 
-            font-size: 2.5em; 
+            font-size: 2.2em; /* Slightly adjusted for balance */
         }
         .subtitle { 
             color: #555; 
-            font-size: 1.2em; 
+            font-size: 1.1em; 
             font-weight: 300; 
             margin-bottom: 15px; 
         }
+        .contact-links { margin-top: 15px; }
         .contact-links a {
             color: #0066cc;
             text-decoration: none;
-            margin-right: 15px;
+            margin: 0 10px;
             font-weight: 500;
         }
         .contact-links a:hover { text-decoration: underline; }
@@ -73,23 +87,33 @@
             font-size: 1.5em;
         }
         
+        p a { color: #0066cc; text-decoration: none; }
+        p a:hover { text-decoration: underline; }
+
         /* Research Items */
         .project-item, .pub-item { margin-bottom: 25px; }
         .pub-title { font-weight: 700; color: #333; }
         .pub-journal { font-style: italic; color: #666; }
         .highlight { background-color: #e8f4ff; padding: 2px 5px; border-radius: 3px; font-size: 0.9em; color: #0066cc; }
 
-        /* Lists */
         ul { padding-left: 20px; }
         li { margin-bottom: 8px; }
+        
+        footer {
+            margin-top: 50px; 
+            padding-top: 20px; 
+            border-top: 1px solid #eee; 
+            color: #888; 
+            font-size: 0.8em; 
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
 
-<header style="text-align: center; padding: 40px 0; background: linear-gradient(to bottom, #f8f9fa, #ffffff);">
-        
+    <header>
         <img src="profile.jpg" alt="Shraddhanand Shukla" class="profile-photo">
         
         <h1>Shraddhanand Shukla, PhD</h1>
@@ -97,10 +121,10 @@
             Researcher, Climate Hazards Center (CHC)<br>
             Department of Geography, University of California, Santa Barbara
         </div>
-        <div class="contact-links" style="margin-top: 15px;">
-            <a href="mailto:sshukla@ucsb.edu" style="color: #0066cc; margin: 0 10px; text-decoration: none;">sshukla@ucsb.edu</a>
-            <a href="https://chc.ucsb.edu/people/shraddhanand-shukla" target="_blank" style="color: #0066cc; margin: 0 10px; text-decoration: none;">CHC Profile</a>
-            <a href="https://scholar.google.com/citations?user=wtJoeUIAAAAJ&hl=en" target="_blank" style="color: #0066cc; margin: 0 10px; text-decoration: none;">Google Scholar</a>
+        <div class="contact-links">
+            <a href="mailto:sshukla@ucsb.edu">sshukla@ucsb.edu</a>
+            <a href="https://chc.ucsb.edu/people/shraddhanand-shukla" target="_blank">CHC Profile</a>
+            <a href="https://scholar.google.com/citations?user=wtJoeUIAAAAJ&hl=en" target="_blank">Google Scholar</a>
         </div>
         
         <a href="cv.pdf" class="btn">Download Full CV</a>
@@ -111,6 +135,12 @@
         <p>
             I am a Researcher at the <a href="https://chc.ucsb.edu/" target="_blank">Climate Hazards Center (CHC)</a> at UC Santa Barbara. 
             My research focuses on improving global drought monitoring and early warning capabilities using advanced Earth Observations, Land Surface Models, and seasonal climate forecasts.
+        </p>
+        <p>
+            I co-authored the book <a href="https://www.sciencedirect.com/book/monograph/9780128140116/drought-early-warning-and-forecasting" target="_blank"><strong>"Drought Early Warning and Forecasting: Theory and Practice"</strong></a> (Elsevier, 2020), which was a Finalist for the <strong>2021 PROSE Awards</strong> in Earth Science.
+        </p>
+        <p>
+            Currently, I lead the <strong>NASA & USAID SERVIR Applied Science Team</strong> for the "Weather and Climate" thematic area. I have secured over <strong>$25M in research funding</strong> as PI or co-PI to support food security and climate resilience globally.
         </p>
     </section>
 
@@ -134,12 +164,6 @@
             <div>S. Shukla, F. Zaheer, A. Hoell, et al. (2024)</div>
             <div class="pub-journal">Weather and Climate Extremes, Vol 45.</div>
         </div>
-
-        <div class="pub-item">
-            <div class="pub-title">Drought Early Warning and Forecasting: Theory and Practice (Book)</div>
-            <div>Chris Funk & Shraddhanand Shukla (2020)</div>
-            <div class="pub-journal">Elsevier. (Finalist for 2021 PROSE Awards in Earth Science).</div>
-        </div>
     </section>
 
     <section>
@@ -160,11 +184,11 @@
     <section>
         <h2>Professional Service</h2>
         <ul>
-            <li><strong>Editor:</strong> Hydrology and Earth System Sciences (EGU)</li> 
+            <li><strong>Editor:</strong> Hydrology and Earth System Sciences (EGU)</li>
             <li><strong>Associate Editor:</strong> Journal of Hydrometeorology (AMS)</li>
             <li><strong>Co-Vice Chair:</strong> AGU WaterSciCon 2024</li>
             <li><strong>Specialty Chief Editor:</strong> Frontiers in Climate – Climate Services (2021–2024)</li>
-            <li><strong>Weather and Climate AST Lead:</strong> SERVIR (NASA/USAID) (2019–2022)</li>
+            <li><strong>Fulbright Specialist:</strong> 2021–2025</li>
         </ul>
     </section>
 
@@ -177,7 +201,7 @@
         </ul>
     </section>
 
-    <footer style="margin-top: 50px; padding-top: 20px; border-top: 1px solid #eee; color: #888; font-size: 0.8em; text-align: center;">
+    <footer>
         &copy; 2026 Shraddhanand Shukla. Hosted on GitHub Pages.
     </footer>
 
