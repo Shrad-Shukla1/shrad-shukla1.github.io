@@ -107,6 +107,30 @@
             font-size: 0.8em; 
             text-align: center;
         }
+
+        /* Tab Navigation */
+        .nav-container {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        .nav-btn {
+            background: none;
+            border: none;
+            font-size: 1.1em;
+            color: #555;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin: 0 5px;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+        }
+        .nav-btn:hover { color: #0066cc; }
+        .nav-btn.active { color: #0066cc; border-bottom: 3px solid #0066cc; }
+        
+        .tab-content { display: none; animation: fadeIn 0.5s; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -130,6 +154,13 @@
         <a href="cv.pdf" class="btn">Download Full CV</a>
     </header>
 
+    <div class="nav-container">
+        <button class="nav-btn active" onclick="openTab(event, 'home')">Home</button>
+        <button class="nav-btn" onclick="openTab(event, 'publications')">Publications</button>
+        <button class="nav-btn" onclick="openTab(event, 'projects')">Projects</button>
+    </div>
+
+    <div id="home" class="tab-content active">
     <section>
         <h2>About Me</h2>
         <p>
@@ -140,7 +171,29 @@
             I co-authored the book <a href="https://www.sciencedirect.com/book/monograph/9780128140116/drought-early-warning-and-forecasting" target="_blank"><strong>"Drought Early Warning and Forecasting: Theory and Practice"</strong></a> (Elsevier, 2020), which was a Finalist for the <strong>2021 PROSE Awards</strong> in Earth Science.
         </p>
     </section>
+    
+    <section>
+        <h2>Professional Service</h2>
+        <ul>
+            <li><strong>Editor:</strong> Hydrology and Earth System Sciences (EGU)</li>
+            <li><strong>Associate Editor:</strong> Journal of Hydrometeorology (AMS)</li>
+            <li><strong>Co-Vice Chair:</strong> AGU WaterSciCon 2024</li>
+            <li><strong>Specialty Chief Editor:</strong> Frontiers in Climate – Climate Services (2021–2024)</li>
+            <li><strong>Fulbright Specialist:</strong> 2023–2025</li>
+        </ul>
+    </section>
 
+    <section>
+        <h2>Education</h2>
+        <ul>
+            <li><strong>PhD, Hydrology & Water Resources</strong> - University of Washington, Seattle (2012)</li>
+            <li><strong>M.Tech, Water Resources</strong> - IIT Kharagpur, India (2005)</li>
+            <li><strong>B.Tech, Agricultural Engineering</strong> - CSAUAT, Kanpur, India (2003)</li>
+        </ul>
+    </section>
+    </div>
+
+    <div id="publications" class="tab-content">
     <section>
         <h2>Selected Recent Publications (2022–2025)</h2>
 
@@ -245,7 +298,9 @@
         </div>
 
     </section>
+    </div>
 
+    <div id="projects" class="tab-content">
     <section>
         <h2>Recent Research Projects</h2>
         <ul>
@@ -270,32 +325,29 @@
             </li>
         </ul>
     </section>
-
-    <section>
-        <h2>Professional Service</h2>
-        <ul>
-            <li><strong>Editor:</strong> Hydrology and Earth System Sciences (EGU)</li>
-            <li><strong>Associate Editor:</strong> Journal of Hydrometeorology (AMS)</li>
-            <li><strong>Co-Vice Chair:</strong> AGU WaterSciCon 2024</li>
-            <li><strong>Specialty Chief Editor:</strong> Frontiers in Climate – Climate Services (2021–2024)</li>
-            <li><strong>Fulbright Specialist:</strong> 2023–2025</li>
-        </ul>
-    </section>
-
-    <section>
-        <h2>Education</h2>
-        <ul>
-            <li><strong>PhD, Hydrology & Water Resources</strong> - University of Washington, Seattle (2012)</li>
-            <li><strong>M.Tech, Water Resources</strong> - IIT Kharagpur, India (2005)</li>
-            <li><strong>B.Tech, Agricultural Engineering</strong> - CSAUAT, Kanpur, India (2003)</li>
-        </ul>
-    </section>
+    </div>
 
     <footer>
         &copy; 2026 Shraddhanand Shukla. Hosted on GitHub Pages.
     </footer>
 
 </div>
+
+<script>
+function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].className = tabcontent[i].className.replace(" active", "");
+    }
+    tablinks = document.getElementsByClassName("nav-btn");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).className += " active";
+    evt.currentTarget.className += " active";
+}
+</script>
 
 </body>
 </html>
