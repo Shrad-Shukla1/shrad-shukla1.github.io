@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Operational Forecast Products | Shraddhanand Shukla, PhD</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy:      #0f2240;
+      --teal:      #1a6e78;
+      --teal-light:#2b9ea9;
+      --sand:      #f5f0e8;
+      --warm-white:#fdfcf9;
+      --text:      #1c1c1c;
+      --muted:     #5a6272;
+      --border:    #ddd8ce;
+      --accent:    #c9502b;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--warm-white);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--navy);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      height: 52px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav a {
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      transition: color 0.2s;
+    }
+    nav a:hover, nav a.active { color: #fff; }
+    nav a.home { font-weight: 500; color: #fff; margin-right: auto; }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(160deg, var(--navy) 0%, #1a3a5c 55%, var(--teal) 100%);
+      padding: 4.5rem 2rem 3.5rem;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 70% 30%, rgba(43,158,169,0.18) 0%, transparent 55%),
+        radial-gradient(circle at 20% 80%, rgba(26,110,120,0.14) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    /* subtle grid lines evoking a map graticule */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg,  transparent, transparent 39px, rgba(255,255,255,0.04) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(255,255,255,0.04) 60px);
+      pointer-events: none;
+    }
+    .hero-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-tag {
+      display: inline-block;
+      background: rgba(43,158,169,0.35);
+      border: 1px solid rgba(43,158,169,0.6);
+      color: #a8e6ec;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.75rem;
+      border-radius: 2px;
+      margin-bottom: 1.1rem;
+    }
+    .hero h1 {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: clamp(1.9rem, 4vw, 2.7rem);
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .hero p {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.78);
+      max-width: 640px;
+      line-height: 1.7;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+    }
+
+    /* ── SECTION HEADER ── */
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 1.4rem;
+      margin-top: 3.2rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 2px solid var(--navy);
+    }
+    .section-header:first-of-type { margin-top: 0; }
+    .section-header h2 {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--navy);
+      letter-spacing: -0.01em;
+    }
+    .section-header .timescale {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ── PRODUCT GRID ── */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.4rem;
+    }
+    .product-grid.single { grid-template-columns: 1fr; }
+    .product-grid.two    { grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); }
+
+    /* ── PRODUCT CARD ── */
+    .card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow 0.22s, transform 0.22s;
+    }
+    .card:hover {
+      box-shadow: 0 8px 28px rgba(15,34,64,0.11);
+      transform: translateY(-2px);
+    }
+
+    /* map preview area */
+    .card-map {
+      width: 100%;
+      height: 180px;
+      background: var(--sand);
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card-map iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      pointer-events: none; /* decorative only in card */
+    }
+    .card-map .map-overlay {
+      position: absolute;
+      inset: 0;
+      background: transparent;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .card-map .map-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-align: center;
+      padding: 1rem;
+    }
+    .map-placeholder .icon {
+      font-size: 2rem;
+      line-height: 1;
+      opacity: 0.55;
+    }
+    .map-placeholder .update-badge {
+      display: inline-block;
+      background: rgba(26,110,120,0.1);
+      color: var(--teal);
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.18rem 0.5rem;
+      border-radius: 2px;
+      border: 1px solid rgba(26,110,120,0.25);
+    }
+
+    /* card body */
+    .card-body {
+      padding: 1.1rem 1.25rem 0.9rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-name {
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-size: 1.02rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 0.25rem;
+      line-height: 1.3;
+    }
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 0.65rem;
+    }
+    .tag {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.18rem 0.5rem;
+      border-radius: 2px;
+    }
+    .tag-coverage  { background: #eef4fb; color: #2a5f9e; border: 1px solid #c4d9ef; }
+    .tag-lead      { background: #f0faf0; color: #276b39; border: 1px solid #b9dfbe; }
+    .tag-frequency { background: #fdf4ec; color: #8a5520; border: 1px solid #f0d0aa; }
+    .tag-partner   { background: #f9f0f8; color: #6b3576; border: 1px solid #dbbde8; }
+
+    .card-desc {
+      font-size: 0.875rem;
+      color: #3d4350;
+      line-height: 1.6;
+      flex: 1;
+      margin-bottom: 0.8rem;
+    }
+
+    /* card footer */
+    .card-footer {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      padding: 0.7rem 1.25rem;
+      border-top: 1px solid var(--border);
+      background: var(--sand);
+    }
+    .btn {
+      font-size: 0.78rem;
+      font-weight: 500;
+      padding: 0.35rem 0.8rem;
+      border-radius: 3px;
+      text-decoration: none;
+      transition: all 0.18s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .btn-primary {
+      background: var(--teal);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--teal-light); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--navy);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { background: #fff; border-color: var(--navy); }
+
+    /* arrow icon */
+    .btn::after { content: '↗'; font-size: 0.7rem; }
+
+    /* ── INTRO NOTE ── */
+    .intro-note {
+      background: linear-gradient(135deg, #eef4fb 0%, #f0faf8 100%);
+      border-left: 3px solid var(--teal);
+      border-radius: 0 4px 4px 0;
+      padding: 1rem 1.25rem;
+      font-size: 0.9rem;
+      color: #2e3a4e;
+      margin-bottom: 2.8rem;
+      line-height: 1.65;
+    }
+    .intro-note strong { color: var(--navy); }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.8rem;
+      color: var(--muted);
+      background: var(--sand);
+    }
+
+    @media (max-width: 600px) {
+      .hero { padding: 3rem 1.25rem 2.5rem; }
+      main  { padding: 2rem 1.25rem 4rem; }
+      nav   { padding: 0 1.25rem; gap: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="home">Shraddhanand Shukla, PhD</a>
+  <a href="index.html">Home</a>
+  <a href="publications.html">Publications</a>
+  <a href="projects.html">Projects</a>
+  <a href="products.html" class="active">Forecast Products</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">Operational Research</div>
+    <h1>Subseasonal to Seasonal<br>Forecast Products</h1>
+    <p>
+      Operational early warning systems developed through research at the
+      <a href="https://chc.ucsb.edu" style="color:#a8e6ec;">Climate Hazards Center</a>,
+      UC Santa Barbara — supporting food security, drought preparedness, and agroclimatic
+      monitoring across vulnerable regions worldwide.
+    </p>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main>
+
+  <div class="intro-note">
+    The products below represent direct research contributions to operational forecast systems
+    used by <strong>FEWS NET</strong>, <strong>NASA</strong>, <strong>USGS</strong>, and
+    <strong>SERVIR</strong> partners. Each product is actively maintained and updated in
+    near-real time. Click <em>View Live Product</em> on any card to access the latest maps and data.
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 1: Subseasonal (days to ~30 days)
+  ═══════════════════════════════════════════ -->
+  <div class="section-header">
+    <h2>Subseasonal Forecasts</h2>
+    <span class="timescale">1 – 30 days ahead</span>
+  </div>
+
+  <div class="product-grid">
+
+    <!-- CHIRPS-GEFS -->
+    <div class="card">
+      <div class="card-map">
+        <div class="map-placeholder">
+          <div class="icon">🌧</div>
+          <div style="font-weight:500;color:#2a3d55;font-size:0.85rem;">Latest 15-day Precip Forecast</div>
+          <div class="update-badge">Updated Daily</div>
+        </div>
+        <a href="https://chc.ucsb.edu/data/chirps-gefs" target="_blank" class="map-overlay" aria-label="View CHIRPS-GEFS live maps"></a>
+      </div>
+      <div class="card-body">
+        <div class="card-name">CHIRPS-GEFS Precipitation Forecasts</div>
+        <div class="card-meta">
+          <span class="tag tag-coverage">Global 50°S–50°N</span>
+          <span class="tag tag-lead">1–15 day lead</span>
+          <span class="tag tag-frequency">Daily updates</span>
+        </div>
+        <div class="card-desc">
+          Bias-corrected, high-resolution (0.05°) precipitation forecasts that seamlessly extend
+          CHIRPS observed rainfall into 15-day outlooks. Used globally for agroclimatic and
+          hydrologic hazards early warning, and featured in FEWS NET, GEOGLAM, and SERVIR
+          ClimateSERV platforms.
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="https://chc.ucsb.edu/data/chirps-gefs" target="_blank" class="btn btn-primary">View Live Product</a>
+        <a href="https://doi.org/10.1038/s41597-022-01327-8" target="_blank" class="btn btn-secondary">Harrison et al. 2022</a>
+      </div>
+    </div>
+
+    <!-- SubX West Africa -->
+    <div class="card">
+      <div class="card-map">
+        <div class="map-placeholder">
+          <div class="icon">🗺</div>
+          <div style="font-weight:500;color:#2a3d55;font-size:0.85rem;">30-Day Rainfall & Dry Spell Forecast</div>
+          <div class="update-badge">Updated Weekly</div>
+        </div>
+        <a href="https://chc.ucsb.edu/monitoring/subx/west-africa" target="_blank" class="map-overlay" aria-label="View SubX West Africa maps"></a>
+      </div>
+      <div class="card-body">
+        <div class="card-name">SubX West Africa Subseasonal Forecasts</div>
+        <div class="card-meta">
+          <span class="tag tag-coverage">West Africa</span>
+          <span class="tag tag-lead">10–30 day lead</span>
+          <span class="tag tag-frequency">Weekly updates</span>
+          <span class="tag tag-partner">NASA SERVIR</span>
+        </div>
+        <div class="card-desc">
+          High-resolution (5 km), bias-corrected multi-model ensemble forecasts for West Africa,
+          derived from the NMME SubX project. Maps show consecutive dry days, total rainfall,
+          and anomalies — key metrics for agropastoral early warning in the Sahel and CILSS countries.
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="https://chc.ucsb.edu/monitoring/subx/west-africa" target="_blank" class="btn btn-primary">View Live Product</a>
+        <a href="https://chc.ucsb.edu/monitoring/subx" target="_blank" class="btn btn-secondary">Global SubX Maps</a>
+      </div>
+    </div>
+
+    <!-- CHC Early Estimates -->
+    <div class="card">
+      <div class="card-map">
+        <div class="map-placeholder">
+          <div class="icon">📡</div>
+          <div style="font-weight:500;color:#2a3d55;font-size:0.85rem;">Rainfall Monitor + 15-day Outlook</div>
+          <div class="update-badge">Every 5 Days</div>
+        </div>
+        <a href="https://chc.ucsb.edu/monitoring" target="_blank" class="map-overlay" aria-label="View CHC Early Estimates"></a>
+      </div>
+      <div class="card-body">
+        <div class="card-name">CHC Early Estimates + Forecast</div>
+        <div class="card-meta">
+          <span class="tag tag-coverage">Sub-Saharan Africa, Latin America</span>
+          <span class="tag tag-lead">Observed + 15-day</span>
+          <span class="tag tag-frequency">Pentadal updates</span>
+          <span class="tag tag-partner">FEWS NET</span>
+        </div>
+        <div class="card-desc">
+          Regional rainfall maps combining the latest CHIRPS observations with CHIRPS-GEFS
+          15-day forecasts. Seasonal Rainfall Monitor and Recent Rainfall Monitor provide
+          multi-period accumulations used to characterize evolving drought conditions and
+          anticipate crop and pasture impacts.
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="https://chc.ucsb.edu/monitoring" target="_blank" class="btn btn-primary">View Live Product</a>
+      </div>
+    </div>
+
+  </div><!-- /product-grid -->
+
+
+  <!-- ═══════════════════════════════════
+       SECTION 2: Seasonal (1–8 months)
+  ═══════════════════════════════════ -->
+  <div class="section-header">
+    <h2>Seasonal Forecasts</h2>
+    <span class="timescale">1 – 8 months ahead</span>
+  </div>
+
+  <div class="product-grid two">
+
+    <!-- NMME/ECMWF MME -->
+    <div class="card">
+      <div class="card-map">
+        <div class="map-placeholder">
+          <div class="icon">🌍</div>
+          <div style="font-weight:500;color:#2a3d55;font-size:0.85rem;">Seasonal Precip & Temp Probability Maps</div>
+          <div class="update-badge">Updated Monthly (~7th)</div>
+        </div>
+        <a href="https://chc.ucsb.edu/monitoring/nmme" target="_blank" class="map-overlay" aria-label="View NMME/ECMWF seasonal forecasts"></a>
+      </div>
+      <div class="card-body">
+        <div class="card-name">CHC Seasonal MME Forecasts (NMME + ECMWF)</div>
+        <div class="card-meta">
+          <span class="tag tag-coverage">Global & Regional</span>
+          <span class="tag tag-lead">1–8 month lead</span>
+          <span class="tag tag-frequency">Monthly (7th)</span>
+          <span class="tag tag-partner">FEWS NET / NASA</span>
+        </div>
+        <div class="card-desc">
+          Probabilistic tercile-category precipitation and temperature forecast maps derived
+          from a 130+ member multi-model ensemble (NMME + ECMWF SEAS5). Validated against
+          hydrometeorological events in East Africa and operationalized to support FEWS NET
+          food security outlooks across Sub-Saharan Africa, Latin America, and Afghanistan.
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="https://chc.ucsb.edu/monitoring/nmme" target="_blank" class="btn btn-primary">View Live Product</a>
+        <a href="https://doi.org/10.1007/s00382-016-3296-z" target="_blank" class="btn btn-secondary">Shukla et al. 2019</a>
+      </div>
+    </div>
+
+    <!-- EDDI Forecasts -->
+    <div class="card">
+      <div class="card-map">
+        <div class="map-placeholder">
+          <div class="icon">☀️</div>
+          <div style="font-weight:500;color:#2a3d55;font-size:0.85rem;">Evaporative Demand Drought Outlooks</div>
+          <div class="update-badge">Experimental / Archived</div>
+        </div>
+        <a href="https://chc.ucsb.edu/data/eddi" target="_blank" class="map-overlay" aria-label="View EDDI forecast product"></a>
+      </div>
+      <div class="card-body">
+        <div class="card-name">EDDI Seasonal Forecast Product</div>
+        <div class="card-meta">
+          <span class="tag tag-coverage">Global</span>
+          <span class="tag tag-lead">1–9 month lead</span>
+          <span class="tag tag-partner">CHC / NOAA PRISM</span>
+        </div>
+        <div class="card-desc">
+          Forecasts of the Evaporative Demand Drought Index (EDDI) derived from CFSv2 model
+          output, including temperature, wind speed, humidity, and radiation. Validation
+          studies (Shukla et al. 2017) demonstrated that reference evapotranspiration forecasts
+          outperform precipitation alone in major agricultural regions.
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="https://chc.ucsb.edu/data/eddi" target="_blank" class="btn btn-primary">View Product Page</a>
+      </div>
+    </div>
+
+  </div><!-- /product-grid two -->
+
+
+  <!-- ═══════════════════════════════════
+       SECTION 3: S2S Hydrological
+  ═══════════════════════════════════ -->
+  <div class="section-header">
+    <h2>S2S Hydrological Forecasts</h2>
+    <span class="timescale">Soil moisture · Streamflow · Rootzone water deficit</span>
+  </div>
+
+  <div class="product-grid two">
+
+    <!-- NHyFAS / FLDAS-Forecast -->
+    <div class="card">
+      <div class="card-map">
+        <div class="map-placeholder">
+          <div class="icon">💧</div>
+          <div style="font-weight:500;color:#2a3d55;font-size:0.85rem;">Rootzone Soil Moisture Forecast</div>
+          <div class="update-badge">Updated Monthly</div>
+        </div>
+        <a href="https://nasaharvest.github.io/fldas-forecast/" target="_blank" class="map-overlay" aria-label="View NHyFAS/FLDAS forecast"></a>
+      </div>
+      <div class="card-body">
+        <div class="card-name">NHyFAS / FLDAS-Forecast (Southern Africa)</div>
+        <div class="card-meta">
+          <span class="tag tag-coverage">Southern Africa</span>
+          <span class="tag tag-lead">1–6 month lead</span>
+          <span class="tag tag-frequency">Monthly</span>
+          <span class="tag tag-partner">NASA GSFC / FEWS NET</span>
+        </div>
+        <div class="card-desc">
+          NASA's S2S hydrological forecast system combining FLDAS land surface models with
+          NMME climate forecasts to generate ensemble rootzone soil moisture and streamflow
+          predictions. Demonstrated ability to identify severe drought events (e.g., 2015–16
+          El Niño drought) at lead times of several months before harvest, enabling timely
+          food insecurity early warning.
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="https://nasaharvest.github.io/fldas-forecast/" target="_blank" class="btn btn-primary">View Live Product</a>
+        <a href="https://doi.org/10.5194/nhess-20-1187-2020" target="_blank" class="btn btn-secondary">Shukla et al. 2020</a>
+        <a href="https://doi.org/10.1016/j.jhydrol.2022.129005" target="_blank" class="btn btn-secondary">Hazra et al. 2023</a>
+      </div>
+    </div>
+
+    <!-- FEWS NET EWX -->
+    <div class="card">
+      <div class="card-map">
+        <div class="map-placeholder">
+          <div class="icon">🖥</div>
+          <div style="font-weight:500;color:#2a3d55;font-size:0.85rem;">Interactive Geospatial Explorer</div>
+          <div class="update-badge">Near Real-Time</div>
+        </div>
+        <a href="https://earlywarning.usgs.gov/fews" target="_blank" class="map-overlay" aria-label="View Early Warning Explorer"></a>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Early Warning eXplorer (EWX)</div>
+        <div class="card-meta">
+          <span class="tag tag-coverage">Sub-Saharan Africa, Latin America</span>
+          <span class="tag tag-lead">Monitoring + Forecast</span>
+          <span class="tag tag-partner">USGS / CHC / NASA</span>
+        </div>
+        <div class="card-desc">
+          Web-based geospatial platform enabling side-by-side exploration of CHIRPS,
+          CHIRPS-GEFS, FLDAS hydrological variables, and climate forecasts. Supports
+          FEWS NET analysts and food security partners in converging evidence across
+          observed and forecasted conditions during crop seasons.
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="https://earlywarning.usgs.gov/fews" target="_blank" class="btn btn-primary">View Live Product</a>
+      </div>
+    </div>
+
+  </div><!-- /product-grid two -->
+
+
+  <!-- ═════════════════════════════════
+       SECTION 4: Regional Reports
+  ═════════════════════════════════ -->
+  <div class="section-header">
+    <h2>Regional Seasonal Outlook Reports</h2>
+    <span class="timescale">Sub-Saharan Africa · South & Central Asia</span>
+  </div>
+
+  <div class="product-grid">
+
+    <!-- East Africa Special Reports -->
+    <div class="card">
+      <div class="card-map">
+        <div class="map-placeholder">
+          <div class="icon">🌾</div>
+          <div style="font-weight:500;color:#2a3d55;font-size:0.85rem;">East Africa Seasonal Analysis</div>
+          <div class="update-badge">Dekadal / Monthly</div>
+        </div>
+        <a href="https://chc.ucsb.edu/monitoring/east-africa-special-reports" target="_blank" class="map-overlay" aria-label="View East Africa Special Reports"></a>
+      </div>
+      <div class="card-body">
+        <div class="card-name">East Africa Special Reports</div>
+        <div class="card-meta">
+          <span class="tag tag-coverage">Ethiopia · Kenya · Somalia</span>
+          <span class="tag tag-lead">Season-to-date + outlook</span>
+          <span class="tag tag-partner">CHC / EMI / KMD / FAO SWALIM</span>
+        </div>
+        <div class="card-desc">
+          Dekadally-updated seasonal reports blending CHIRPS data with national rain gauge
+          networks (Ethiopia NMA, Kenya Meteorological Department, Somalia Meteorology),
+          CHIRPS-GEFS outlooks, and analog-year methods. Directly informs FEWS NET food
+          security outlooks for the Horn of Africa.
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="https://chc.ucsb.edu/monitoring/east-africa-special-reports" target="_blank" class="btn btn-primary">View Latest Reports</a>
+      </div>
+    </div>
+
+    <!-- Afghanistan Report -->
+    <div class="card">
+      <div class="card-map">
+        <div class="map-placeholder">
+          <div class="icon">🏔</div>
+          <div style="font-weight:500;color:#2a3d55;font-size:0.85rem;">Afghanistan Agroclimatic Outlook</div>
+          <div class="update-badge">Monthly</div>
+        </div>
+        <a href="https://chc.ucsb.edu/monitoring/afghanistan" target="_blank" class="map-overlay" aria-label="View Afghanistan Agroclimatic Report"></a>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Afghanistan Agroclimatic Outlook</div>
+        <div class="card-meta">
+          <span class="tag tag-coverage">Afghanistan</span>
+          <span class="tag tag-lead">Seasonal outlook</span>
+          <span class="tag tag-partner">CHC / FEWS NET / USGS</span>
+        </div>
+        <div class="card-desc">
+          Monthly multi-variable report synthesizing precipitation, snowpack, streamflow,
+          vegetation conditions, and seasonal climate forecasts across Afghanistan — a highly
+          food-insecure country with a complex mountain hydrology. Research on ENSO-based
+          drought outlooks for Afghanistan (Shukla et al. 2024) directly supports this product.
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="https://chc.ucsb.edu/monitoring/afghanistan" target="_blank" class="btn btn-primary">View Latest Report</a>
+        <a href="https://doi.org/10.1016/j.wace.2024.100697" target="_blank" class="btn btn-secondary">Shukla et al. 2024</a>
+      </div>
+    </div>
+
+    <!-- GEOGLAM CM4EW -->
+    <div class="card">
+      <div class="card-map">
+        <div class="map-placeholder">
+          <div class="icon">🌱</div>
+          <div style="font-weight:500;color:#2a3d55;font-size:0.85rem;">Monthly Crop Condition Bulletin</div>
+          <div class="update-badge">Monthly</div>
+        </div>
+        <a href="https://cropmonitor.org" target="_blank" class="map-overlay" aria-label="View GEOGLAM Crop Monitor"></a>
+      </div>
+      <div class="card-body">
+        <div class="card-name">GEOGLAM Crop Monitor for Early Warning</div>
+        <div class="card-meta">
+          <span class="tag tag-coverage">Sub-Saharan Africa, Latin America</span>
+          <span class="tag tag-lead">In-season + seasonal outlook</span>
+          <span class="tag tag-partner">GEOGLAM / CHC / NASA Harvest / FEWS NET</span>
+        </div>
+        <div class="card-desc">
+          Monthly regional crop condition outlooks incorporating CHIRPS-GEFS rainfall forecasts,
+          NMME seasonal forecasts, NDVI-based vegetation monitoring, and hydrological model output.
+          CHC contributes climate and forecast assessments for food-insecure regions, with past
+          outlooks having provided advance warning of major drought events.
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="https://cropmonitor.org" target="_blank" class="btn btn-primary">View Latest Bulletin</a>
+      </div>
+    </div>
+
+  </div><!-- /product-grid -->
+
+
+  <!-- ════════════════════════════════════
+       SECTION 5: Crop Yield Forecasts
+  ════════════════════════════════════ -->
+  <div class="section-header">
+    <h2>Crop Yield Forecasts</h2>
+    <span class="timescale">Preseason · In-season · FEWS NET Countries</span>
+  </div>
+
+  <div class="product-grid two">
+
+    <!-- Preseason Maize/Wheat Forecasts -->
+    <div class="card">
+      <div class="card-map">
+        <div class="map-placeholder">
+          <div class="icon">🌽</div>
+          <div style="font-weight:500;color:#2a3d55;font-size:0.85rem;">Preseason Maize & Wheat Yield Forecasts</div>
+          <div class="update-badge">Annual / Preseason</div>
+        </div>
+        <a href="https://www.usaid.gov/fews" target="_blank" class="map-overlay" aria-label="View FEWS NET crop forecasts"></a>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Preseason Crop Yield Forecasts (FEWS NET Countries)</div>
+        <div class="card-meta">
+          <span class="tag tag-coverage">Sub-Saharan Africa, S. Asia</span>
+          <span class="tag tag-lead">Preseason (months ahead)</span>
+          <span class="tag tag-partner">USGS / CHC / NASA Harvest</span>
+        </div>
+        <div class="card-desc">
+          Statistical preseason forecasting system for maize and wheat yields using S2S climate
+          forecasts, ENSO teleconnections, and Earth observation inputs. Provides actionable
+          lead times for food crisis early warning before planting decisions are made. Published
+          in <em>Nature Communications</em> (Anderson, Shukla et al. 2024) and operationalized
+          through USGS-funded FEWS NET projects.
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="https://doi.org/10.1038/s41467-024-51462-y" target="_blank" class="btn btn-primary">Anderson, Shukla et al. 2024</a>
+        <a href="https://www.usaid.gov/fews" target="_blank" class="btn btn-secondary">FEWS NET Portal</a>
+      </div>
+    </div>
+
+    <!-- SSA Maize ML Forecasts -->
+    <div class="card">
+      <div class="card-map">
+        <div class="map-placeholder">
+          <div class="icon">📊</div>
+          <div style="font-weight:500;color:#2a3d55;font-size:0.85rem;">ML-Based In-Season Crop Outlooks</div>
+          <div class="update-badge">In-season / Annual</div>
+        </div>
+        <a href="https://doi.org/10.1016/j.gfs.2022.100643" target="_blank" class="map-overlay" aria-label="View SSA crop forecast publication"></a>
+      </div>
+      <div class="card-body">
+        <div class="card-name">Sub-Saharan Africa Maize Yield Forecasting System</div>
+        <div class="card-meta">
+          <span class="tag tag-coverage">Sub-Saharan Africa</span>
+          <span class="tag tag-lead">In-season to preseason</span>
+          <span class="tag tag-partner">CHC / USGS</span>
+        </div>
+        <div class="card-desc">
+          Machine learning-based crop forecasting system combining Earth observation data
+          (CHIRPS, MODIS NDVI, FLDAS soil moisture) with climate forecasts for subnational
+          maize yield prediction across food-insecure regions in Sub-Saharan Africa.
+          Research spanning panel, time-series, and spatial out-of-sample models supports
+          continued operational development.
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="https://doi.org/10.1016/j.gfs.2022.100643" target="_blank" class="btn btn-primary">Lee, Shukla et al. 2022</a>
+        <a href="https://doi.org/10.1016/j.agrformet.2024.110213" target="_blank" class="btn btn-secondary">Lee et al. 2024</a>
+      </div>
+    </div>
+
+  </div><!-- /product-grid two -->
+
+</main>
+
+<footer>
+  © 2026 Shraddhanand Shukla, PhD · Climate Hazards Center, UC Santa Barbara ·
+  <a href="index.html" style="color:var(--teal);">Back to Home</a>
+</footer>
+
+</body>
+</html>
